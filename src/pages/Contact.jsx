@@ -127,23 +127,23 @@ const ContactPage = () => {
       {/* Header */}
       <header className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-sky-800 text-white">
         <div className="max-w-7xl mx-auto px-6 py-20 md:py-28 relative z-10">
-          <h1 className="text-4xl md:text-6xl font-extrabold leading-tight drop-shadow">
+          <h1 className="text-4xl md:text-6xl font-extrabold leading-tight drop-shadow text-center">
             Contact
           </h1>
-          <h2 className="text-2xl md:text-3xl font-semibold mt-4 mb-4">
+          <h2 className="text-2xl md:text-3xl font-semibold mt-4 mb-4 text-center">
             Connect With Us in Your Region
           </h2>
-          <p className="mt-6 max-w-3xl text-lg md:text-xl opacity-90">
+          <p className="mt-6 max-w-3xl text-lg md:text-xl opacity-90 text-center  mx-auto">
             SLU TWA operates across four regions, and our team is ready to connect with you—whether you're a jobseeker or interested in volunteering, donating, sponsoring, partnering, or joining our team. No matter your location, we’re here to support your involvement and answer any questions. To get in touch with the regional contact nearest you, please email us at{" "}
             <a href="mailto:twa@slu.edu" className="underline text-sky-200 hover:text-white">
               twa@slu.edu
             </a>{" "}
-            or contact Meredith Rataj at{" "}
+            {/* or contact Meredith Rataj at{" "}
             <a href="mailto:meredith.rj@slu.edu" className="underline text-sky-200 hover:text-white">
               meredith.rj@slu.edu
-            </a>.
-          </p>
-          <p className="mt-4 max-w-3xl text-lg md:text-xl font-bold opacity-90">
+            </a>. */}
+          .</p>
+          <p className="mt-4 max-w-3xl text-lg md:text-xl font-bold opacity-90 text-center mx-auto">
             Let’s work together to create pathways to opportunity and lasting impact.
           </p>
           <div className="mt-8 flex flex-wrap gap-4 justify-center">
@@ -222,7 +222,7 @@ const ContactPage = () => {
                   <img
                     src={member.image}
                     alt={`${member.name}`}
-                    className="w-50 h-90 rounded-sm object-cover lazy-load"
+                    className="h-90 rounded-sm object-cover lazy-load"
                     loading="lazy"
                     onError={(e) => (e.target.src = {TWA})}
                   />
@@ -240,7 +240,7 @@ const ContactPage = () => {
                     {member.bio && (
                       <button
                         onClick={() => openStaffModal(member)}
-                        className="text-emerald-600 font-bold text-sm hover:text-emerald-700 transition-colors mt-2"
+                        className="text-emerald-600 font-bold text-sm hover:text-emerald-700 transition-colors mt-2 cursor-pointer"
                         aria-label={`Read more about ${member.name}`}
                       >
                         Read More
@@ -273,12 +273,12 @@ const ContactPage = () => {
             <button
               onClick={() => setStaffModalOpen(false)}
               type="button"
-              className="absolute top-3 right-3 text-gray-500 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+              className="absolute text-xl cursor-pointer top-3 right-3 text-gray-500 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-emerald-600 font-bold"
               aria-label="Close"
             >
               ✕
             </button>
-            <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex flex-col md:flex-row gap-6 p-2">
               <div className="flex-1">
                 <h3 className="text-xl font-semibold mb-2">{selectedStaff.name}</h3>
                 <p className="text-sm text-gray-500 mb-4">{selectedStaff.title || selectedStaff.role}</p>
