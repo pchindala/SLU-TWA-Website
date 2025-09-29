@@ -4,18 +4,35 @@ import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const isLoggedIn = Boolean(localStorage.getItem("authToken"));
+  const isAdmin = isLoggedIn && localStorage.getItem("userType") === "admin";
 
   return (
     <>
       {/* Top strip */}
       <div className="flex justify-end bg-[#003da5] text-white p-3">
         <nav className="px-6 space-x-4 font-['Crimson_Pro'] text-[16px] font-bold">
-         <button
-            onClick={() => navigate("/login")}
-            className="cursor-pointer"
-          >
-           Login
-          </button>
+         {isLoggedIn ? (
+           <button
+             onClick={() => {
+               localStorage.removeItem("authToken");
+               localStorage.removeItem("userType");
+               navigate("/");
+             }}
+             className="cursor-pointer"
+           >
+             Logout
+           </button>
+         ) : (
+           <button
+             onClick={() => navigate("/login")}
+             className="cursor-pointer"
+           >
+             Login
+           </button>
+         )}
+
+
           <button onClick={() => navigate("/contact")} className="cursor-pointer">Contact US</button>
           {/* <a href="https://www.slu.edu/apply.php">Apply</a> */}
         </nav>
@@ -54,12 +71,23 @@ export default function Navbar() {
           <button onClick={() => navigate("/news")} className="cursor-pointer">
             News
           </button>
-          <button
-            onClick={() => navigate("/video")}
-            className="cursor-pointer"
-          >
-            Video Platform
-          </button>
+          {isLoggedIn && (
+            <button
+              onClick={() => navigate("/video")}
+              className="cursor-pointer"
+            >
+              Video Platform
+            </button>
+          )}
+          {isAdmin && (
+            <button
+              onClick={() => navigate("/admin")}
+              className="cursor-pointer"
+            >
+              Admin
+            </button>
+          )}
+
           {/* <button
             onClick={() => navigate("/contact")}
             className="cursor-pointer"

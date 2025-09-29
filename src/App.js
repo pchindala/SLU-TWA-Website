@@ -9,7 +9,44 @@ import News from "./pages/News";
 import VideoPlatform from "./pages/VideoPlatform";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
+import Admin from "./pages/Admin";
+import { Navigate } from "react-router-dom";
+import { isLoggedIn, isAdmin } from "./api/controller/userType";
+import React, { useEffect, useState } from "react";
+// ProtectedRoute component
+function IsLoginProtectedRoute({ element }) {
+  return isLoggedIn() ? element : <Navigate to="/login" replace />;
+}
 
+// AccessDeniedWithRedirect component
+function AccessDeniedWithRedirect() {
+  const [redirect, setRedirect] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setRedirect(true), 5000);
+    return () => clearTimeout(timer);
+  }, []);
+  if (redirect) {
+    return <Navigate to="/" replace />;
+  }
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[70vh] text-center p-6">
+      <h1 className="text-4xl font-bold mb-4 text-red-600">Access Denied</h1>
+      <p className="text-lg mb-6">You are not an admin and cannot access this page.</p>
+      <p className="text-md mb-6">You will be redirected to the home page in 5 seconds.</p>
+    </div>
+  );
+}
+
+// Admin ProtectedRoute component
+function IsAdminProtectedRoute({ element }) {
+  if (isAdmin()) {
+    return element;
+  }
+  if (isLoggedIn()) {
+    return <AccessDeniedWithRedirect />;
+  }
+  return <Navigate to="/" replace />;
+}
 // fallback page for invalid routes
 function NotFound() {
   return (
@@ -51,8 +88,10 @@ function App() {
           <Route path="/who-we-serve" element={<WhoWeServe />} />
           <Route path="/how-to-support" element={<HowToSupport />} />
           <Route path="/news" element={<News />} />
-          <Route path="/video" element={<VideoPlatform />} />
+          <Route path="/video" element={<IsLoginProtectedRoute element={<VideoPlatform />} />} />
           <Route path="/contact" element={<Contact />} />
+          {/* Admin route */}
+          <Route path="/admin" element={<IsAdminProtectedRoute element={<Admin />} />} />
           {/* fallback */}
           <Route path="*" element={<NotFound />} />
         </Routes>

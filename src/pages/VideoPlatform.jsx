@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { isAdmin } from "../api/controller/userType";
 import { useNavigate, Link } from "react-router-dom";
 import {
   FaSearch,
@@ -139,13 +140,16 @@ const VideoCard = ({ video, toggleFavorite, openResumeModal, deleteVideo }) => {
         >
           <FaHeart size={15} />
         </button>
-        <button
-          onClick={() => deleteVideo(video.id)}
-          className="absolute bottom-4 left-16 text-gray-500 hover:text-blue-600 transition cursor-pointer"
-          title="Edit"
-        >
-          <FaPencilAlt size={15} />
-        </button>
+        {isAdmin() && (
+          <button
+            onClick={() => deleteVideo(video.id)}
+            className="absolute bottom-4 left-16 text-gray-500 hover:text-blue-600 transition cursor-pointer"
+            title="Edit"
+          >
+            <FaPencilAlt size={15} />
+          </button>
+        )}
+        {isAdmin() && (
         <button
           onClick={() => deleteVideo(video.id)}
           className="absolute bottom-4 right-16 text-gray-500 hover:text-red-600 transition cursor-pointer"
@@ -153,6 +157,7 @@ const VideoCard = ({ video, toggleFavorite, openResumeModal, deleteVideo }) => {
         >
           <FaTrash size={15} />
         </button>
+        )}
         <button
           onClick={() => openResumeModal(video)}
           className="absolute bottom-4 right-4 text-gray-500 hover:text-blue-600 transition cursor-pointer"

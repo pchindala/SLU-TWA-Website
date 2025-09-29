@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../api/controller/login";
+import { signUpUser } from "../api/controller/SignUp";
 export default function Login() {
   const [isRegister, setIsRegister] = useState(false);
   const [passwordError, setPasswordError] = useState("");
@@ -40,9 +42,54 @@ export default function Login() {
       return;
     }
 
-    // Navigation to home (simulated)
-    setPasswordError("");
-    alert("Login successful! Redirecting to home...");
+    if (!isRegister) {
+    // Use actual form values for login
+    loginUser({
+      userName: email,
+      password: password
+    })
+      .then((data) => {
+        console.log(data)
+        console.log("Login successful:", data);
+        // Save token and userType to localStorage
+        if (data.token) {
+          localStorage.setItem("authToken", data.token);
+        }
+        if (data.userType) {
+          localStorage.setItem("userType", data.userType);
+        }
+        setPasswordError("");
+        alert("Login successful! Redirecting to home...");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Login failed:", error);
+        setPasswordError("Login failed. Please check your credentials.");
+      });
+
+      // navigate("/");
+
+} else {
+      // Registration logic using signUpUser
+      const userData = {
+        name: fullName,
+        userName: email,
+        password,
+      };
+      console.log("Registering user:", userData);
+      signUpUser(userData)
+        .then((data) => {
+          alert("Registration successful! Please login.");
+          setIsRegister(false);
+        })
+        .catch((error) => {
+          setPasswordError("Registration failed. Please try again.",error);
+        });
+    }
+
+    // // Navigation to home (simulated)
+    // setPasswordError("");
+    // alert("Login successful! Redirecting to home...");
   };
 
   return (
@@ -129,19 +176,19 @@ export default function Login() {
           </p>
         </div>
 
-        <div className="flex items-center my-4">
+        {/* <div className="flex items-center my-4">
           <div className="flex-grow border-t border-gray-300"></div>
           <span className="mx-4 text-gray-500 font-['Crimson_Pro']">OR</span>
           <div className="flex-grow border-t border-gray-300"></div>
-        </div>
+        </div> */}
 
-        <button
+        {/* <button
           type="button"
          onClick={() => navigate("/")}
           className="w-full h-[35px] rounded-[5px] bg-gray-100 hover:bg-gray-200 text-gray-700 text-[14px] mb-4 font-['Crimson_Pro'] cursor-pointer transition-colors duration-200"
         >
           Continue as a Guest
-        </button>
+        </button> */}
 
         <p className="text-[12px] font-['Crimson_Pro'] text-gray-500 text-center">
           Contact 314-977-4000 for help
