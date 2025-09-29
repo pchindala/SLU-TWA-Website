@@ -6,7 +6,8 @@ class User {
     dob,
     email,
     profilePhoto,
-    userId
+    userId,
+    _id // Added _id as a parameter
   ) {
     this.fullName = fullName; // Frontend field
     this.userName = userName;
@@ -15,9 +16,11 @@ class User {
     this.email = email;
     this.profilePhoto = profilePhoto;
     this.userId = userId;
+    this._id = _id; // Initialize _id
   }
 
   static fromJSON(json) {
+    console.log("User JSON from API:", json);
     return new User(
       json.name, // Map API field `name` to frontend field `fullName`
       json.userName,
@@ -25,7 +28,8 @@ class User {
       json.dob,
       json.email,
       json.profilePhoto,
-      json.userId
+      json.userId,
+      json._id // Include _id in fromJSON mapping
     );
   }
 
@@ -44,6 +48,7 @@ class User {
       email: this.email,
       profilePhoto: this.profilePhoto,
       userId: this.userId,
+      _id: this._id, // Include _id in toJSON output
     };
   }
 }

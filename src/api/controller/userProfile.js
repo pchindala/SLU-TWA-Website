@@ -50,3 +50,68 @@ export async function updateUserProfile(updatedData) {
     throw error;
   }
 }
+
+/**
+ * Fetch all users from the API.
+ * @returns {Promise} A promise that resolves to the list of users formatted as UserModel instances.
+ */
+export const getAllUsers = async () => {
+  try {
+    const response = await axios.get(API_PATHS.users, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    });
+
+    // Format the response data into UserModel instances
+    return response.data.map((user) => User.fromJSON(user));
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw error;
+  }
+};
+
+/**
+ * Update the user type for a specific user.
+ * @param {string} id - The ID of the user.
+ * @param {string} userType - The new user type (e.g., 'admin', 'regularuser').
+ * @returns {Promise} A promise that resolves to the updated user data.
+ */
+export const updateUserType = async (id, userType) => {
+  try {
+    const response = await axios.patch(
+      API_PATHS.updateUserType(id),
+      { userType },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      }
+    );
+    alert(`User type updated successfully: ${response.data.message}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user type:", error);
+    throw error;
+  }
+};
+
+/**
+ * Delete a user by their ID.
+ * @param {string} id - The ID of the user to delete.
+ * @returns {Promise} A promise that resolves to the deletion response.
+ */
+export const deleteUser = async (id) => {
+  try {
+    const response = await axios.delete(API_PATHS.deleteUser(id), {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      },
+    });
+    alert(`User deleted successfully: ${response.data.message}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw error;
+  }
+};

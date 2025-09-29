@@ -9,5 +9,7 @@ export const API_PATHS = {
   regions: `${BASE_URL}/regions`, // GET
   industries: `${BASE_URL}/industries`, // GET
   resumes: `${BASE_URL}/resumes`, // POST
+  updateUserType: (id) => `${BASE_URL}/users/${id}/admin`, // PATCH
+  deleteUser: (id) => `${BASE_URL}/users/${id}`, // DELETE
   // Add more endpoints as needed
 };

@@ -333,13 +333,26 @@ const Profile = () => {
                 Date of Birth
               </label>
               <p className="text-lg font-medium text-gray-800">
-                {new Date(
-                  user.dob.replace(/(\d{2})(\d{2})(\d{4})/, "$2/$1/$3")
-                ).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                {user.dob &&
+                  (() => {
+                    const dobString = user.dob;
+                    console.log("Original Date String:", dobString);
+                    const parsedDate = dobString.match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
+                      ? new Date(dobString)
+                      : dobString.match(/^(\d{2})(\d{2})(\d{4})$/)
+                      ? new Date(
+                          dobString.replace(/(\d{2})(\d{2})(\d{4})/, "$2/$1/$3")
+                        )
+                      : null;
+                    console.log("Parsed Date:", parsedDate);
+                    return parsedDate
+                      ? parsedDate.toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })
+                      : "Invalid Date";
+                  })()}
               </p>
             </div>
             <div>

@@ -6,7 +6,12 @@ import axios from "axios";
 import User from "../Model/UserModel";
 import { API_PATHS } from "../paths";
 
-export async function signUpUser(userData) {
+/**
+ * Sign up a new user.
+ * @param {Object} userData - The user data to register.
+ * @returns {Promise} A promise that resolves to the server response.
+ */
+export const signUpUser = async (userData) => {
   try {
     // Convert frontend user data to API format using UserModel
     const user = new User(
@@ -35,9 +40,24 @@ export async function signUpUser(userData) {
       },
     });
     console.log("Sign up response:", response.data);
+
+    if (response.status !== 200 && response.status !== 201) {
+      alert(`Error: ${response.data?.error || response.statusText}`);
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
+
     return User.fromJSON(response.data); // Convert API response to UserModel
   } catch (error) {
     console.error("Error signing up user:", error);
+
+    if (axios.isAxiosError(error)) {
+      // Axios-specific error
+      alert("all fields are mandatory",error.message);
+    } else {
+      // Non-Axios error
+      alert(`Error: ${error.message}`);
+    }
+
     throw error;
   }
-}
+};

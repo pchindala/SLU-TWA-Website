@@ -137,6 +137,39 @@ export default function Login() {
     }
   };
 
+  const validateFields = (fields) => {
+    for (const [key, value] of Object.entries(fields)) {
+      if (!value) {
+        throw new Error(`${key} is a mandatory field.`);
+      }
+    }
+  };
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = {
+      username: event.target.username.value,
+      password: event.target.password.value,
+      email: event.target.email.value,
+      fullName: event.target.fullName.value,
+      dob: event.target.dob.value,
+      profilePhoto: event.target.profilePhoto.files[0],
+      // ... add other fields as necessary
+      reEnterPassword: event.target.reEnterPassword ? event.target.reEnterPassword.value : null,
+      // ... add other fields as necessary
+      // Add other fields as necessary
+    };
+
+    try {
+      validateFields(formData);
+      // Proceed with form submission logic
+      console.log("Form submitted successfully with data:", formData);
+    } catch (error) {
+      alert("hahahah",error.message);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#3D6E9B] to-[#003DA5] flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md">
@@ -177,6 +210,7 @@ export default function Login() {
               <label className="text-[14px] mb-1 text-gray-700">Profile Photo</label>
               <input
                 name="profilePhoto"
+                required
                 type="file"
                 accept="image/*"
                 className="mb-4 w-full h-[35px] text-[12px] px-4 rounded-[5px] border border-gray-300 bg-white text-black placeholder-black/60 font-['Crimson_Pro'] focus:outline-none focus:border-[#003DA5] focus:ring-1 focus:ring-[#003DA5]"
