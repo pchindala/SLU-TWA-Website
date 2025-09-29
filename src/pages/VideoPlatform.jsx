@@ -14,10 +14,16 @@ import {
   FaPencilAlt,
   FaTrash,
 } from "react-icons/fa";
-import { RegionCardData, industryList, videoObj } from "../data/videoPlatformData";
 import Logo from "../assets/contact-images/JTNL_Logo_2021.png";
 import Community from "./Community";
 import resumeImage from "../assets/resumes/resume.webp";
+import { RegionsCardData } from "../api/controller/videoController/regions";
+import { IndustryCardData } from "../api/controller/videoController/industry";
+import { ResumeCardData } from "../api/controller/videoController/resume";
+import RegionDialog from "./DialogBoxes/RegionDialog";
+import IndustryDialog from "./DialogBoxes/IndustryDialog";
+import ResumeDialog from "./DialogBoxes/ResumeDialog";
+import { deleteResume, updateResumeAPI } from "../api/controller/videoController/resume";
 
 // City Card Component
 const CityCard = ({ city }) => {
@@ -116,7 +122,7 @@ const ResumeModal = ({ showModal, setShowResumeModal, selectedVideo }) => {
 };
 
 // Video Card Component
-const VideoCard = ({ video, toggleFavorite, openResumeModal, deleteVideo }) => {
+const VideoCard = ({ video, toggleFavorite, openResumeModal, deleteVideo, onEdit }) => {
   return (
     <div className="m-6 w-[300px] h-[450px] border-[0.5px] border-[#003DA5] rounded-lg shadow-md relative bg-white flex-shrink-0">
       <video controls className="w-full h-[250px]">
@@ -127,6 +133,7 @@ const VideoCard = ({ video, toggleFavorite, openResumeModal, deleteVideo }) => {
         <h2 className="text-[24px] font-bold text-[#003DA5]">{video.name}</h2>
         <p className="text-[14px] my-2">{video.description}</p>
         <p className="text-[12px]">
+          {console.log('video.skills:', video.skills)}
           Skills: <span className="text-gray-500">{video.skills}</span>
         </p>
       </div>
@@ -142,7 +149,7 @@ const VideoCard = ({ video, toggleFavorite, openResumeModal, deleteVideo }) => {
         </button>
         {isAdmin() && (
           <button
-            onClick={() => deleteVideo(video.id)}
+            onClick={() => onEdit(video)}
             className="absolute bottom-4 left-16 text-gray-500 hover:text-blue-600 transition cursor-pointer"
             title="Edit"
           >
@@ -172,9 +179,9 @@ const VideoCard = ({ video, toggleFavorite, openResumeModal, deleteVideo }) => {
 
 // Main VideoPlatform Component
 const VideoPlatform = () => {
-  const [regions, setRegions] = useState(RegionCardData);
-  const [industries, setIndustries] = useState(industryList);
-  const [videos, setVideos] = useState(videoObj);
+  const [regions, setRegions] = useState([]);
+  const [industries, setIndustries] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [regionSearch, setRegionSearch] = useState("");
   const [industrySearch, setIndustrySearch] = useState("");
   const [videoSearch, setVideoSearch] = useState("");
@@ -184,12 +191,52 @@ const VideoPlatform = () => {
   const [transportFilter, setTransportFilter] = useState("");
   const [showResumeModal, setShowResumeModal] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [showRegionDialog, setShowRegionDialog] = useState(false);
+  const [showIndustryDialog, setShowIndustryDialog] = useState(false);
+  const [showResumeDialog, setShowResumeDialog] = useState(false);
+  const [selectedResume, setSelectedResume] = useState(null);
   const regionSearchRef = useRef(null);
   const industrySearchRef = useRef(null);
   const videoSearchRef = useRef(null);
   const regionScrollRef = useRef(null);
   const industryScrollRef = useRef(null);
   const videoScrollRef = useRef(null);
+
+  useEffect(() => {
+    const fetchRegions = async () => {
+      try {
+        const data = await RegionsCardData();
+        setRegions(data);
+      } catch (error) {
+        console.error("Error fetching regions:", error);
+      }
+    };
+
+    const fetchIndustries = async () => {
+      try {
+        console.log("Fetching industries...");
+        const data = await IndustryCardData();
+        console.log("Fetched industries:", data);
+        setIndustries(data);
+      } catch (error) {
+        console.error("Error fetching industries:", error);
+      }
+    };
+
+    const fetchResumes = async () => {
+      try {
+        const data = await ResumeCardData();
+        console.log("Fetched resumes:", data);
+        setVideos(data);
+      } catch (error) {
+        console.error("Error fetching resumes:", error);
+      }
+    };
+
+    fetchRegions();
+    fetchIndustries();
+    fetchResumes();
+  }, []);
 
   // Search Handlers
   const handleRegionSearch = (e) => setRegionSearch(e.target.value.trim());
@@ -203,17 +250,41 @@ const VideoPlatform = () => {
   const handleTransportFilter = (e) => setTransportFilter(e.target.value);
 
   // Favorite Toggle
-  const toggleFavorite = (id) => {
-    setVideos((prev) =>
-      prev.map((video) =>
-        video.id === id ? { ...video, isFavorite: !video.isFavorite } : video
-      )
-    );
+  const toggleFavorite = async (id) => {
+    try {
+      const videoToUpdate = videos.find((video) => video.id === id);
+      if (!videoToUpdate) return;
+
+      const updatedVideo = {
+        ...videoToUpdate,
+        isFavorite: !videoToUpdate.isFavorite,
+      };
+      console.log('Updating video favorite status:', updatedVideo);
+      const updateFavorite = {
+        id: updatedVideo.id,
+        isFavorite: updatedVideo.isFavorite
+      };
+      await updateResumeAPI(updateFavorite);
+
+      setVideos((prev) =>
+        prev.map((video) =>
+          video.id === id ? { ...video, isFavorite: updatedVideo.isFavorite } : video
+        )
+      );
+    } catch (error) {
+      console.error(`Error toggling favorite for video with id ${id}:`, error);
+    }
   };
 
   // Delete Video
-  const deleteVideo = (id) => {
-    setVideos((prev) => prev.filter((video) => video.id !== id));
+  const deleteVideo = async (id) => {
+    try {
+      await deleteResume(id); // Use the deleteResume function from the video controller
+      setVideos((prev) => prev.filter((video) => video.id !== id));
+      alert(`Video with id deleted successfully.`); // Show success alert
+    } catch (error) {
+      console.error(`Error deleting video with id ${id}:`, error);
+    }
   };
 
   // Open Resume Modal
@@ -222,13 +293,50 @@ const VideoPlatform = () => {
     setShowResumeModal(true);
   };
 
+  // Create Region
+  const createRegion = (newRegion) => {
+    setRegions((prev) => [...prev, newRegion]);
+  };
+
+  // Create Industry
+  const createIndustry = (newIndustry) => {
+    setIndustries((prev) => [...prev, newIndustry]);
+  };
+
+  // Create Resume
+  const createResume = (newResume) => {
+    setVideos((prev) => [...prev, newResume]);
+  };
+
+  // Edit Resume
+  const handleEditResume = (resume) => {
+    setSelectedResume(resume);
+    setShowResumeDialog(true);
+  };
+
+  const updateResume = async (updatedResume) => {
+    try {
+      // Call API to update resume
+      console.log("Updating resume:", updatedResume);
+      // Assuming updateResume API exists
+      await updateResumeAPI(updatedResume);
+      // Refresh resumes
+      const data = await ResumeCardData();
+      setVideos(data);
+      setShowResumeDialog(false);
+      setSelectedResume(null);
+    } catch (error) {
+      console.error("Error updating resume:", error);
+    }
+  };
+
   // Filtered Data
   const filteredRegions = React.useMemo(
     () =>
       regions.filter(
         (city) =>
-          (city.city.toLowerCase().includes(regionSearch.toLowerCase()) ||
-            city.state.toLowerCase().includes(regionSearch.toLowerCase())) &&
+          (city.city?.toLowerCase().includes(regionSearch.toLowerCase()) ||
+            city.state?.toLowerCase().includes(regionSearch.toLowerCase())) &&
           (locationFilter ? city.city === locationFilter : true)
       ),
     [regionSearch, locationFilter, regions]
@@ -248,13 +356,16 @@ const VideoPlatform = () => {
     () =>
       industries.filter(
         (ind) =>
-          ind.name.toLowerCase().includes(industrySearch.toLowerCase()) &&
+          ind.name?.toLowerCase().includes(industrySearch.toLowerCase()) &&
           (locationFilter ? ind.location === locationFilter : true) &&
           (industryFilter ? ind.name === industryFilter : true)
       ),
     [industrySearch, locationFilter, industryFilter, industries]
   );
-
+  console.log('industries:', industries);
+  console.log('Filtered industries:', filteredIndustries);
+  const dropdownUniqueIndustries = [...new Set(industries.map((ind) => ({ industryId: ind.id, industry: `${ind.name} at ${ind.location}` })))];
+  const dropdownUniqueLocations = [...new Set(regions.map((city) => ({ city: city.city, cityId: city.cityId })))];
   const uniqueLocations = [...new Set(regions.map((city) => city.city))];
   const uniqueIndustries = [...new Set(industries.map((ind) => ind.name))];
 
@@ -262,7 +373,7 @@ const VideoPlatform = () => {
     () =>
       videos.filter(
         (vid) =>
-          vid.name.toLowerCase().includes(videoSearch) &&
+          vid.name?.toLowerCase().includes(videoSearch) &&
           (categoryFilter ? vid.category === categoryFilter : true) &&
           (transportFilter ? vid.transport === transportFilter : true) &&
           (locationFilter ? vid.location === locationFilter : true) &&
@@ -346,6 +457,16 @@ const VideoPlatform = () => {
               </select>
               <FaFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#003DA5] text-[16px]" />
             </div>
+                  {/* Add Region Button */}
+      {isAdmin() && (
+      <button
+        onClick={() => setShowRegionDialog(true)}
+        className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        title="Add Region"
+      >
+        Add Region
+      </button>
+      )}
           </div>
           {Object.entries(groupedByState).map(([state, cities]) => (
             <div key={state} className="mb-8">
@@ -416,7 +537,18 @@ const VideoPlatform = () => {
               </select>
               <FaFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#003DA5] text-[16px]" />
             </div>
+                              {/* Add Industry Button */}
+      {isAdmin() && (
+      <button
+        onClick={() => setShowIndustryDialog(true)}
+        className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        title="Add Industry"
+      >
+        Add Industry
+      </button>
+      )}
           </div>
+          
           <div
             ref={industryScrollRef}
             className="flex flex-nowrap w-full overflow-scroll scroll-smooth scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-[#003DA5] scroll-active:overflow-x-auto"
@@ -504,11 +636,19 @@ const VideoPlatform = () => {
               </select>
               <FaFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#003DA5] text-[16px]" />
             </div>
+                  <button
+        onClick={() => setShowResumeDialog(true)}
+        className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        title="Add Video"
+      >
+        Add Video
+      </button>
           </div>
           <div
             ref={videoScrollRef}
             className="flex flex-nowrap w-full overflow-scroll scroll-smooth scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-[#003DA5] scroll-active:overflow-x-auto"
           >
+            {console.log('Filtered videos:', filteredVideos)}
             {filteredVideos.length > 0 ? (
               filteredVideos.map((video, index) => (
                 <VideoCard
@@ -517,6 +657,7 @@ const VideoPlatform = () => {
                   toggleFavorite={toggleFavorite}
                   openResumeModal={openResumeModal}
                   deleteVideo={deleteVideo}
+                  onEdit={() => handleEditResume(video)}
                 />
               ))
             ) : (
@@ -532,7 +673,31 @@ const VideoPlatform = () => {
         setShowResumeModal={setShowResumeModal}
         selectedVideo={selectedVideo}
       />
+      {/* Create Region Dialog */}
+      <RegionDialog
+        showModal={showRegionDialog}
+        setShowModal={setShowRegionDialog}
+        onCreateRegion={createRegion}
+      />
+      {/* Create Industry Dialog */}
+      <IndustryDialog
+        showModal={showIndustryDialog}
+        setShowModal={setShowIndustryDialog}
+        onCreateIndustry={createIndustry}
+        locations={dropdownUniqueLocations}
+      />
+      {/* Create Resume Dialog */}
+      <ResumeDialog
+        showModal={showResumeDialog}
+        setShowModal={setShowResumeDialog}
+        onCreateResume={createResume}
+        onEditResume={updateResume}
+        selectedResume={selectedResume}
+        industries={dropdownUniqueIndustries}
+      />
       <Community />
+
+
     </div>
   );
 };
