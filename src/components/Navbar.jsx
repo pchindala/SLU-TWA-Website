@@ -32,7 +32,6 @@ export default function Navbar() {
            </button>
          )}
 
-
           <button onClick={() => navigate("/contact")} className="cursor-pointer">Contact US</button>
           {/* <a href="https://www.slu.edu/apply.php">Apply</a> */}
         </nav>
@@ -87,7 +86,10 @@ export default function Navbar() {
               Admin
             </button>
           )}
-
+          <button onClick={() => navigate("/profile")} className="cursor-pointer">
+            Profile
+          </button>
+          
           {/* <button
             onClick={() => navigate("/contact")}
             className="cursor-pointer"

@@ -10,6 +10,7 @@ import VideoPlatform from "./pages/VideoPlatform";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
+import Profile from "./pages/Profile";
 import { Navigate } from "react-router-dom";
 import { isLoggedIn, isAdmin } from "./api/controller/userType";
 import React, { useEffect, useState } from "react";
@@ -90,6 +91,7 @@ function App() {
           <Route path="/news" element={<News />} />
           <Route path="/video" element={<IsLoginProtectedRoute element={<VideoPlatform />} />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/profile" element={<Profile />} />
           {/* Admin route */}
           <Route path="/admin" element={<IsAdminProtectedRoute element={<Admin />} />} />
           {/* fallback */}

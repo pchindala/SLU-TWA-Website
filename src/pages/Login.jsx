@@ -2,9 +2,19 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/controller/login";
 import { signUpUser } from "../api/controller/SignUp";
+import axios from "axios";
+import User from "../api/Model/UserModel";
+
 export default function Login() {
   const [isRegister, setIsRegister] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+  const [formData, setFormData] = useState({
+    fullName: "",
+    userName: "",
+    dob: "",
+    email: "",
+    profilePhoto: "",
+  });
 
   const toggleMode = () => {
     setIsRegister(!isRegister);
@@ -72,24 +82,59 @@ export default function Login() {
 } else {
       // Registration logic using signUpUser
       const userData = {
-        name: fullName,
-        userName: email,
+        fullName: formData.fullName,
+        userName: formData.userName,
+        dob: formData.dob,
+        email: formData.email,
+        profilePhoto: formData.profilePhoto,
         password,
       };
-      console.log("Registering user:", userData);
+
       signUpUser(userData)
         .then((data) => {
           alert("Registration successful! Please login.");
           setIsRegister(false);
         })
         .catch((error) => {
-          setPasswordError("Registration failed. Please try again.",error);
+          console.log(error);
+          setPasswordError("Registration failed. Please try again.");
         });
     }
 
     // // Navigation to home (simulated)
     // setPasswordError("");
     // alert("Login successful! Redirecting to home...");
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      const user = new User(
+        formData.fullName,
+        formData.userName,
+        formData.userType,
+        formData.dob,
+        formData.email,
+        formData.profilePhoto,
+      );
+
+      const apiPayload = user.toJSON();
+
+      const response = await axios.post("/api/register", apiPayload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("User registered successfully:", response.data);
+    } catch (error) {
+      console.error("Error registering user:", error);
+    }
   };
 
   return (
@@ -115,9 +160,48 @@ export default function Login() {
                 placeholder="Enter your full name"
                 required
                 className="mb-4 w-full h-[35px] text-[12px] px-4 rounded-[5px] border border-gray-300 bg-white text-black placeholder-black/60 font-['Crimson_Pro'] focus:outline-none focus:border-[#003DA5] focus:ring-1 focus:ring-[#003DA5]"
+                value={formData.fullName}
+                onChange={handleChange}
+              />
+
+              <label className="text-[14px] mb-1 text-gray-700">Date of Birth</label>
+              <input
+                name="dob"
+                type="date"
+                required
+                className="mb-4 w-full h-[35px] text-[12px] px-4 rounded-[5px] border border-gray-300 bg-white text-black placeholder-black/60 font-['Crimson_Pro'] focus:outline-none focus:border-[#003DA5] focus:ring-1 focus:ring-[#003DA5]"
+                value={formData.dob}
+                onChange={handleChange}
+              />
+
+              <label className="text-[14px] mb-1 text-gray-700">Profile Photo</label>
+              <input
+                name="profilePhoto"
+                type="file"
+                accept="image/*"
+                className="mb-4 w-full h-[35px] text-[12px] px-4 rounded-[5px] border border-gray-300 bg-white text-black placeholder-black/60 font-['Crimson_Pro'] focus:outline-none focus:border-[#003DA5] focus:ring-1 focus:ring-[#003DA5]"
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    profilePhoto: e.target.files[0],
+                  }))
+                }
+              />
+
+              <label className="text-[14px] mb-1 text-gray-700">Username</label>
+              <input
+                name="userName"
+                type="text"
+                placeholder="Enter your username"
+                required
+                className="mb-4 w-full h-[35px] text-[12px] px-4 rounded-[5px] border border-gray-300 bg-white text-black placeholder-black/60 font-['Crimson_Pro'] focus:outline-none focus:border-[#003DA5] focus:ring-1 focus:ring-[#003DA5]"
+                value={formData.userName}
+                onChange={handleChange}
               />
             </>
           )}
+
+          
 
           <label className="text-[14px] mb-1 text-gray-700">Email</label>
           <input
@@ -126,6 +210,8 @@ export default function Login() {
             placeholder="Enter your email address"
             required
             className="mb-4 w-full h-[35px] text-[12px] px-4 rounded-[5px] border border-gray-300 bg-white text-black placeholder-black/60 font-['Crimson_Pro'] focus:outline-none focus:border-[#003DA5] focus:ring-1 focus:ring-[#003DA5]"
+            value={formData.email}
+            onChange={handleChange}
           />
 
           <label className="text-[14px] mb-1 text-gray-700">Password</label>
@@ -136,7 +222,19 @@ export default function Login() {
             required
             className="mb-2 w-full h-[35px] text-[12px] px-4 rounded-[5px] border border-gray-300 bg-white text-black placeholder-black/60 font-['Crimson_Pro'] focus:outline-none focus:border-[#003DA5] focus:ring-1 focus:ring-[#003DA5]"
           />
-
+          {isRegister && (
+            <>
+              <label className="text-[14px] mb-1 text-gray-700">Re-enter Password</label>
+              <input
+                name="reEnterPassword"
+                type="password"
+                placeholder="Re-enter your password"
+                required
+                className="mb-4 w-full h-[35px] text-[12px] px-4 rounded-[5px] border border-gray-300 bg-white text-black placeholder-black/60 font-['Crimson_Pro'] focus:outline-none focus:border-[#003DA5] focus:ring-1 focus:ring-[#003DA5]"
+                onChange={handleChange}
+              />
+            </>
+          )}
           {/* Password error */}
           {passwordError && (
             <p className="text-red-500 text-[12px] mb-2 font-['Crimson_Pro']">
