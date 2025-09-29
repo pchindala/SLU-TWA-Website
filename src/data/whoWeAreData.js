@@ -68,3 +68,128 @@ export const testimonials = [
     role: "Retail Management"
   }
 ];
+
+export const updatedImpactStats = [
+    {
+      number: "278",
+      label: "JOBSEEKERS EMPLOYED",
+      description: "Since 2020, successfully placed in meaningful employment"
+    },
+    {
+      number: "4%",
+      label: "RECIDIVISM RATE",
+      description: "Compared to Missouri's most recent rate of 32%"
+    },
+    {
+      number: "76%",
+      label: "EMPLOYMENT SUCCESS",
+      description: "Of jobseekers employed within 2 months of engagement"
+    },
+    {
+      number: "$15.01",
+      label: "AVERAGE HOURLY WAGE",
+      description: "With trades program participants earning $21/hour"
+    }
+  ];
+
+  // New program updates data
+  export const programUpdates = [
+    "Continued leveraging technology, including video resumes",
+    "Expanded pre-release work to 4 MO prisons + Transition Center + St. Louis County Jail", 
+    "Added new Employment Specialist and Outreach Coordinator positions to increase capacity"
+  ];
+
+  // Job fair statistics
+  export const jobFairStats = [
+    { number: "31", label: "NEW EMPLOYERS", description: "Opening opportunities" },
+    { number: "60", label: "JOBSEEKERS TRAINED", description: "Job fair participants" },
+    { number: "75", label: "JOB COACHES", description: "Supporting jobseekers" },
+    { number: "148", label: "CEREMONY PARTICIPANTS", description: "Job fair graduates" }
+  ];
+
+  // Updated testimonials with new quote
+  export const updatedTestimonials = [
+    ...testimonials,
+    {
+      quote: "I am thankful for the opportunity I got and everything the TWA did to help me. It gave me hope not to give up on my dreams.",
+      name: "TWA Jobseeker",
+      role: "Program Participant"
+    }
+  ];
+
+  // Sponsors and partners
+  export const sponsors = [
+    "Missouri Department of Corrections",
+    "Missouri Department of Higher Education and Workforce Development", 
+    "Pershing Foundation",
+    "Lutheran Foundation",
+    "Stanley Black and Decker"
+  ];
+
+  export const jobFairSponsors = [
+    "Walmart", "Jack & Rachel Oliver", "Clark Fox Family Foundation", 
+    "Katie Sinquefield", "Regional Business Council", "US Bank"
+  ];
+
+   // Updated statistics with new information
+  // const updatedImpactStats = [
+  //   {
+  //     number: "278",
+  //     label: "JOBSEEKERS EMPLOYED",
+  //     description: "Since 2020, successfully placed in meaningful employment"
+  //   },
+  //   {
+  //     number: "4%",
+  //     label: "RECIDIVISM RATE",
+  //     description: "Compared to Missouri's most recent rate of 32%"
+  //   },
+  //   {
+  //     number: "76%",
+  //     label: "EMPLOYMENT SUCCESS",
+  //     description: "Of jobseekers employed within 2 months of engagement"
+  //   },
+  //   {
+  //     number: "$15.01",
+  //     label: "AVERAGE HOURLY WAGE",
+  //     description: "With trades program participants earning $21/hour"
+  //   }
+  // ];
+
+  // // New program updates data
+  // const programUpdates = [
+  //   "Continued leveraging technology, including video resumes",
+  //   "Expanded pre-release work to 4 MO prisons + Transition Center + St. Louis County Jail", 
+  //   "Added new Employment Specialist and Outreach Coordinator positions to increase capacity"
+  // ];
+
+  // // Job fair statistics
+  // const jobFairStats = [
+  //   { number: "31", label: "NEW EMPLOYERS", description: "Opening opportunities" },
+  //   { number: "60", label: "JOBSEEKERS TRAINED", description: "Job fair participants" },
+  //   { number: "75", label: "JOB COACHES", description: "Supporting jobseekers" },
+  //   { number: "148", label: "CEREMONY PARTICIPANTS", description: "Job fair graduates" }
+  // ];
+
+  // // Updated testimonials with new quote
+  // const updatedTestimonials = [
+  //   ...testimonials,
+  //   {
+  //     quote: "I am thankful for the opportunity I got and everything the TWA did to help me. It gave me hope not to give up on my dreams.",
+  //     name: "TWA Jobseeker",
+  //     role: "Program Participant"
+  //   }
+  // ];
+
+  // // Sponsors and partners
+  // const sponsors = [
+  //   "Missouri Department of Corrections",
+  //   "Missouri Department of Higher Education and Workforce Development", 
+  //   "Pershing Foundation",
+  //   "Lutheran Foundation",
+  //   "Stanley Black and Decker"
+  // ];
+
+  // const jobFairSponsors = [
+  //   "Walmart", "Jack & Rachel Oliver", "Clark Fox Family Foundation", 
+  //   "Katie Sinquefield", "Regional Business Council", "US Bank"
+  // ];
