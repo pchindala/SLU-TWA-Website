@@ -1,6 +1,6 @@
 import { API_PATHS } from "../../paths";
 import axios from "axios";
-import Resume from "../../Model/ResumeModel";
+import Resume, { ResumeModel } from "../../Model/ResumeModel";
 
 export async function ResumeCardData() {
 //   try {
@@ -69,3 +69,33 @@ export async function updateResumeAPI(updatedResume) {
     throw error;
   }
 }
+
+export const createResumeAPI = async (resume) => {
+  const formData = new FormData();
+  const resumeData = resume;
+
+  formData.append("name", resumeData.name);
+  formData.append("video", resumeData.video);
+  formData.append("description", resumeData.description);
+  formData.append("skills", resumeData.skills.join(","));
+  formData.append("category", resumeData.category);
+  formData.append("transport", resumeData.transport);
+  formData.append("industry", resumeData.industry);
+  formData.append("isFavorite", resumeData.isFavorite);
+
+  const token = localStorage.getItem("authToken");
+
+  try {
+    const response = await axios.post(API_PATHS.resumes, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(`Resume created successfully: ${JSON.stringify(response.data)}`);
+    return Resume.fromJSON(response.data);
+  } catch (error) {
+    console.error("Error creating resume:", error);
+    throw error;
+  }
+};

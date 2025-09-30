@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
-import { API_PATHS } from '../../api/paths';
+import { createResumeAPI } from '../../api/controller/videoController/resume';
 
 const ResumeDialog = ({ showModal, setShowModal, onCreateResume, onEditResume, selectedResume, industries }) => {
     const initialResumeState = {
@@ -68,24 +67,8 @@ const ResumeDialog = ({ showModal, setShowModal, onCreateResume, onEditResume, s
                 };
                 await onEditResume(updatedResume);
             } else {
-                const formData = new FormData();
-                formData.append('name', resume.name);
-                formData.append('video', resume.video);
-                formData.append('description', resume.description);
-                formData.append('skills', resume.skills.join(','));
-                formData.append('category', resume.category);
-                formData.append('transport', resume.transport);
-                formData.append('industry', resume.industry);
-                formData.append('isFavorite', resume.isFavorite);
-
-                const token = localStorage.getItem('authToken');
-                const response = await axios.post(API_PATHS.resumes, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                onCreateResume(response.data);
+                const resumedata = await createResumeAPI(resume);
+                onCreateResume(resumedata);
             }
 
             setResume(initialResumeState);

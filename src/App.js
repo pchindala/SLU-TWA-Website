@@ -14,6 +14,9 @@ import Profile from "./pages/Profile";
 import { Navigate } from "react-router-dom";
 import { isLoggedIn, isAdmin } from "./api/controller/userType";
 import React, { useEffect, useState } from "react";
+import Spinner from "./components/Spinner";
+import axios from "axios";
+
 // ProtectedRoute component
 function IsLoginProtectedRoute({ element }) {
   return isLoggedIn() ? element : <Navigate to="/login" replace />;
@@ -79,8 +82,38 @@ function Layout({ children }) {
 }
 
 function App() {
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const requestInterceptor = axios.interceptors.request.use((config) => {
+      setLoading(true);
+      return config;
+    });
+
+    const responseInterceptor = axios.interceptors.response.use(
+      (response) => {
+        setLoading(false);
+        return response;
+      },
+      (error) => {
+        setLoading(false);
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.request.eject(requestInterceptor);
+      axios.interceptors.response.eject(responseInterceptor);
+    };
+  }, []);
+
   return (
     <Router>
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50">
+          <Spinner />
+        </div>
+      )}
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />

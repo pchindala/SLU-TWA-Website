@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/controller/login";
 import { signUpUser } from "../api/controller/SignUp";
-import axios from "axios";
 import User from "../api/Model/UserModel";
+import axios from "axios";
 
 export default function Login() {
   const [isRegister, setIsRegister] = useState(false);
@@ -20,7 +20,9 @@ export default function Login() {
     setIsRegister(!isRegister);
     setPasswordError("");
   };
+
   const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     if (e) e.preventDefault();
 
@@ -53,33 +55,29 @@ export default function Login() {
     }
 
     if (!isRegister) {
-    // Use actual form values for login
-    loginUser({
-      userName: email,
-      password: password
-    })
-      .then((data) => {
-        console.log(data)
-        console.log("Login successful:", data);
-        // Save token and userType to localStorage
-        if (data.token) {
-          localStorage.setItem("authToken", data.token);
-        }
-        if (data.userType) {
-          localStorage.setItem("userType", data.userType);
-        }
-        setPasswordError("");
-        alert("Login successful! Redirecting to home...");
-        navigate("/");
+      loginUser({
+        userName: email,
+        password: password,
       })
-      .catch((error) => {
-        console.error("Login failed:", error);
-        setPasswordError("Login failed. Please check your credentials.");
-      });
-
-      // navigate("/");
-
-} else {
+        .then((data) => {
+          console.log(data);
+          console.log("Login successful:", data);
+          // Save token and userType to localStorage
+          if (data.token) {
+            localStorage.setItem("authToken", data.token);
+          }
+          if (data.userType) {
+            localStorage.setItem("userType", data.userType);
+          }
+          setPasswordError("");
+          alert("Login successful! Redirecting to home...");
+          navigate("/");
+        })
+        .catch((error) => {
+          console.error("Login failed:", error);
+          setPasswordError("Login failed. Please check your credentials.");
+        });
+    } else {
       // Registration logic using signUpUser
       const userData = {
         fullName: formData.fullName,
@@ -100,10 +98,6 @@ export default function Login() {
           setPasswordError("Registration failed. Please try again.");
         });
     }
-
-    // // Navigation to home (simulated)
-    // setPasswordError("");
-    // alert("Login successful! Redirecting to home...");
   };
 
   const handleChange = (e) => {
@@ -134,39 +128,6 @@ export default function Login() {
       console.log("User registered successfully:", response.data);
     } catch (error) {
       console.error("Error registering user:", error);
-    }
-  };
-
-  const validateFields = (fields) => {
-    for (const [key, value] of Object.entries(fields)) {
-      if (!value) {
-        throw new Error(`${key} is a mandatory field.`);
-      }
-    }
-  };
-
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-
-    const formData = {
-      username: event.target.username.value,
-      password: event.target.password.value,
-      email: event.target.email.value,
-      fullName: event.target.fullName.value,
-      dob: event.target.dob.value,
-      profilePhoto: event.target.profilePhoto.files[0],
-      // ... add other fields as necessary
-      reEnterPassword: event.target.reEnterPassword ? event.target.reEnterPassword.value : null,
-      // ... add other fields as necessary
-      // Add other fields as necessary
-    };
-
-    try {
-      validateFields(formData);
-      // Proceed with form submission logic
-      console.log("Form submitted successfully with data:", formData);
-    } catch (error) {
-      alert("hahahah",error.message);
     }
   };
 
@@ -234,8 +195,6 @@ export default function Login() {
               />
             </>
           )}
-
-          
 
           <label className="text-[14px] mb-1 text-gray-700">Email</label>
           <input
