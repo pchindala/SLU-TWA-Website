@@ -28,10 +28,12 @@ export default function Login() {
     const fullNameInput = document.querySelector('input[name="fullName"]');
     const emailInput = document.querySelector('input[name="email"]');
     const passwordInput = document.querySelector('input[name="password"]');
+    const passwordConfirmInput = document.querySelector('input[name="passwordConfirm"]');
 
     const fullName = isRegister && fullNameInput ? fullNameInput.value.trim() : null;
     const email = emailInput ? emailInput.value.trim() : "";
     const password = passwordInput ? passwordInput.value.trim() : "";
+    const passwordConfirm = passwordConfirmInput ? passwordConfirmInput.value.trim() : "";
 
     if (isRegister && !fullName) {
       setPasswordError("Full Name is required.");
@@ -42,13 +44,19 @@ export default function Login() {
       return;
     }
 
-    // Password validation
+    // Password validation for both password and passwordConfirm
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
-    if (!passwordRegex.test(password)) {
+      console.log("isRegister:", isRegister);
+    if (isRegister && (!passwordRegex.test(password) || !passwordRegex.test(passwordConfirm))) {
       setPasswordError(
-        "Password must be at least 8 characters long, include 1 lowercase, 1 uppercase, 1 number, and 1 special character."
+        "Password and Password Confirm must each be at least 8 characters long, include 1 lowercase, 1 uppercase, 1 number, and 1 special character."
       );
+      return;
+    }
+
+    if (isRegister && password !== passwordConfirm) {
+      setPasswordError("Passwords do not match.");
       return;
     }
 
@@ -88,8 +96,9 @@ export default function Login() {
         email: formData.email,
         profilePhoto: formData.profilePhoto,
         password,
+        passwordConfirm: formData.passwordConfirm
       };
-
+      console.log("Registering user with data:", userData);
       signUpUser(userData)
         .then((data) => {
           alert("Registration successful! Please login.");
@@ -114,17 +123,26 @@ export default function Login() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const user = new User(
-        formData.fullName,
-        formData.userName,
-        formData.userType,
-        formData.dob,
-        formData.email,
-        formData.profilePhoto,
-      );
+      // const user = new User(
+      //   formData.fullName,
+      //   formData.userName,
+      //   formData.userType,
+      //   formData.dob,
+      //   formData.email,
+      //   formData.profilePhoto,
+  
+      // );
 
-      const apiPayload = user.toJSON();
-
+      const apiPayload = {
+        fullName: formData.fullName,
+        userName: formData.userName,
+        userType: formData.userType,
+        dob: formData.dob,
+        email: formData.email,
+        profilePhoto: formData.profilePhoto,
+        passwordConfirm: formData.passwordConfirm // Added passwordConfirm directly to the payload
+      };
+      console.log("Registering user with payload:", apiPayload);
       const response = await axios.post("/api/register", apiPayload, {
         headers: {
           "Content-Type": "application/json",
@@ -258,11 +276,12 @@ export default function Login() {
           />
           {isRegister && (
             <>
-              <label className="text-[14px] mb-1 text-gray-700">Re-enter Password</label>
+              <label className="text-[14px] mb-1 text-gray-700">Password Confirm</label>
               <input
-                name="reEnterPassword"
+                name="passwordConfirm"
                 type="password"
                 placeholder="Re-enter your password"
+                value={formData.passwordConfirm}
                 required
                 className="mb-4 w-full h-[35px] text-[12px] px-4 rounded-[5px] border border-gray-300 bg-white text-black placeholder-black/60 font-['Crimson_Pro'] focus:outline-none focus:border-[#003DA5] focus:ring-1 focus:ring-[#003DA5]"
                 onChange={handleChange}
@@ -285,7 +304,7 @@ export default function Login() {
               <button
                 type="button"
                 className="no-underline font-['Crimson_Pro'] text-[#003DA5] hover:text-[#3D6E9B] cursor-pointer bg-transparent border-none p-0"
-                onClick={() => console.log("Forgot password clicked")}
+                onClick={() => alert('For password recovery, please contact the admin.')}
               >
                 Forgot password?
               </button>

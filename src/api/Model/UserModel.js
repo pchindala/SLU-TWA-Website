@@ -38,13 +38,11 @@ class User {
       name: this.fullName, // Map frontend field `fullName` to API field `name`
       userName: this.userName,
       userType: this.userType,
-      dob: new Date(this.dob)
-        .toLocaleDateString("en-US", {
-          month: "2-digit",
-          day: "2-digit",
-          year: "numeric",
-        })
-        .replace(/\//g, ""), // Format to MMDDYYYY
+      dob: new Date(this.dob).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      }), // Format to MM/DD/YYYY
       email: this.email,
       profilePhoto: this.profilePhoto,
       userId: this.userId,

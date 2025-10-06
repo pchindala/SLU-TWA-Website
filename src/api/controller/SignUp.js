@@ -25,7 +25,8 @@ export const signUpUser = async (userData) => {
 
     const apiPayload = {
       ...user.toJSON(),
-      password: userData.password, // Add password only in API payload
+      password: userData.password,
+      passwordConfirm: userData.passwordConfirm // Add password and passwordConfirm only in API payload
     };
     console.log("Signing up user with payload:", apiPayload);
 
@@ -48,14 +49,12 @@ export const signUpUser = async (userData) => {
 
     return User.fromJSON(response.data); // Convert API response to UserModel
   } catch (error) {
-    console.error("Error signing up user:", error);
-
-    if (axios.isAxiosError(error)) {
-      // Axios-specific error
-      alert("all fields are mandatory",error.message);
+    if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+      console.error("Sign up failed with status 400:", error.response.data);
+      alert(`Sign up failed: ${error.response.data.error}`);
     } else {
-      // Non-Axios error
-      alert(`Error: ${error.message}`);
+      console.error("Error signing up user:", error);
+      alert("Sign up failed. Please try again.");
     }
 
     throw error;
