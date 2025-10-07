@@ -15,6 +15,13 @@ export async function loginUser(credentials) {
     );
     return response.data;
   } catch (error) {
+    if (axios.isAxiosError(error) && error.response && error.response.status === 400) {
+      console.error("login failed with status 400:", error.response.data);
+      alert(`Login failed: ${error.response.data.error}`);
+    } else {
+      console.error("Error logging in user:", error);
+      alert("Login failed. Please try again.");
+    }
     throw error;
   }
 }
