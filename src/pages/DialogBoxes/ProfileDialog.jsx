@@ -58,7 +58,7 @@ const ProfileDialog = ({ user, onSave, showModal, setShowModal }) => {
               required
             />
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="block text-sm font-medium mb-2">Date of Birth:</label>
             <input
               type="date"
@@ -68,7 +68,7 @@ const ProfileDialog = ({ user, onSave, showModal, setShowModal }) => {
               className="w-full border border-gray-300 rounded-lg p-2"
               required
             />
-          </div>
+          </div> */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">Profile Photo:</label>
             <input

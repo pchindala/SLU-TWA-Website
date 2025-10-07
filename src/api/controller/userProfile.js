@@ -9,6 +9,7 @@ export async function getUserProfile() {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },
     });
+    console.log("User profile response:", response.data);
     return User.fromJSON(response.data); // Convert API response to UserModel
   } catch (error) {
     console.error("Error fetching user profile:", error);

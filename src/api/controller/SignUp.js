@@ -18,11 +18,11 @@ export const signUpUser = async (userData) => {
       userData.fullName,
       userData.userName,
       userData.userType,
-      userData.dob,
+      // dob: userData.dob,
       userData.email,
       userData.profilePhoto
     );
-
+    console.log("User object to be signed up:", user);
     const apiPayload = {
       ...user.toJSON(),
       password: userData.password,
@@ -34,7 +34,7 @@ export const signUpUser = async (userData) => {
     Object.entries(apiPayload).forEach(([key, value]) => {
       formData.append(key, value);
     });
-
+    console.log("FormData before dending the entries:");
     const response = await axios.post(API_PATHS.users, formData, {
       headers: {
         "Content-Type": "multipart/form-data",

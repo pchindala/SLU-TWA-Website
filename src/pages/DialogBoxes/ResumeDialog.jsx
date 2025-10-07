@@ -152,10 +152,22 @@ const ResumeDialog = ({ showModal, setShowModal, onCreateResume, onEditResume, s
                             onChange={handleChange}
                             className="w-full border border-gray-300 rounded-lg p-2"
                         >
-                            <option value="offense">Offense</option>
-                            <option value="defense">Defense</option>
-                            <option value="support">Support</option>
-                            <option value="other">Other</option>
+                            <option value="None">None</option>
+                            <option value="All crimes against a person">All crimes against a person</option>
+                            <option value="Armed Criminal Action (crimes involving a gun)">Armed Criminal Action (crimes involving a gun)</option>
+                            <option value="Case by case">Case by case</option>
+                            <option value="Crimes within the last 7 years">Crimes within the last 7 years</option>
+                            <option value="Crimes within the last 3 years">Crimes within the last 3 years</option>
+                            <option value="Drug-related offenses">Drug-related offenses</option>
+                            <option value="Embezzlement">Embezzlement</option>
+                            <option value="Fraud">Fraud</option>
+                            <option value="Murder (1st degree)">Murder (1st degree)</option>
+                            <option value="Murder (1st and 2nd degree)">Murder (1st and 2nd degree, which involves loss of life but the)</option>
+                            <option value="Offense involving children">Offense involving children</option>
+                            <option value="Sexual offense (All)">Sexual offense (All)</option>
+                            <option value="Sexual offense (involving children)">Sexual offense (involving children)</option>
+                            <option value="Theft">Theft</option>
+                            <option value="Violent crimes">Violent crimes</option>
                         </select>
                     </div>
                     <div className="mb-4">
@@ -166,9 +178,10 @@ const ResumeDialog = ({ showModal, setShowModal, onCreateResume, onEditResume, s
                             onChange={handleChange}
                             className="w-full border border-gray-300 rounded-lg p-2"
                         >
-                            <option value="public">Public</option>
-                            <option value="private">Private</option>
-                            <option value="none">None</option>
+                            <option value="None">None</option>
+                            <option value="Public">Public</option>
+                            <option value="Private">Private</option>
+                            
                         </select>
                     </div>
                     {console.log(`see dropdown industries: ${JSON.stringify(industries)}`)}

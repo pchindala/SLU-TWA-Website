@@ -92,7 +92,7 @@ export default function Login() {
       const userData = {
         fullName: formData.fullName,
         userName: formData.userName,
-        dob: formData.dob,
+        // dob: formData.dob || undefined, // Make DOB optional by setting it to undefined if not provided
         email: formData.email,
         profilePhoto: formData.profilePhoto,
         password,
@@ -120,41 +120,64 @@ export default function Login() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    try {
-      // const user = new User(
-      //   formData.fullName,
-      //   formData.userName,
-      //   formData.userType,
-      //   formData.dob,
-      //   formData.email,
-      //   formData.profilePhoto,
+  // const handleRegister = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     // const user = new User(
+  //     //   formData.fullName,
+  //     //   formData.userName,
+  //     //   formData.userType,
+  //     //   formData.dob,
+  //     //   formData.email,
+  //     //   formData.profilePhoto,
   
-      // );
+  //     // );
 
-      const apiPayload = {
-        fullName: formData.fullName,
-        userName: formData.userName,
-        userType: formData.userType,
-        dob: formData.dob,
-        email: formData.email,
-        profilePhoto: formData.profilePhoto,
-        passwordConfirm: formData.passwordConfirm // Added passwordConfirm directly to the payload
-      };
-      console.log("Registering user with payload:", apiPayload);
-      const response = await axios.post("/api/register", apiPayload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+  //     const apiPayload = {
+  //       fullName: formData.fullName,
+  //       userName: formData.userName,
+  //       userType: formData.userType,
+  //       dob: formData.dob,
+  //       email: formData.email,
+  //       profilePhoto: formData.profilePhoto,
+  //       passwordConfirm: formData.passwordConfirm // Added passwordConfirm directly to the payload
+  //     };
+  //     console.log("Registering user with payload:", apiPayload);
+  //     const response = await axios.post("/api/register", apiPayload, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
 
-      console.log("User registered successfully:", response.data);
-    } catch (error) {
-      console.error("Error registering user:", error);
-    }
-  };
+  //     console.log("User registered successfully:", response.data);
+  //   } catch (error) {
+  //     console.error("Error registering user:", error);
+  //   }
+  // };
+  // const handleFormSubmit = async (event) => {
+  //   event.preventDefault();
 
+  //   const formData = {
+  //     username: event.target.username.value,
+  //     password: event.target.password.value,
+  //     email: event.target.email.value,
+  //     fullName: event.target.fullName.value,
+  //     dob: event.target.dob.value,
+  //     profilePhoto: event.target.profilePhoto.files[0],
+  //     // ... add other fields as necessary
+  //     reEnterPassword: event.target.reEnterPassword ? event.target.reEnterPassword.value : null,
+  //     // ... add other fields as necessary
+  //     // Add other fields as necessary
+  //   };
+
+  //   try {
+  //     validateFields(formData);
+  //     // Proceed with form submission logic
+  //     console.log("Form submitted successfully with data:", formData);
+  //   } catch (error) {
+  //     alert("hahahah",error.message);
+  //   }
+  // };
   const validateFields = (fields) => {
     for (const [key, value] of Object.entries(fields)) {
       if (!value) {
@@ -163,30 +186,7 @@ export default function Login() {
     }
   };
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
 
-    const formData = {
-      username: event.target.username.value,
-      password: event.target.password.value,
-      email: event.target.email.value,
-      fullName: event.target.fullName.value,
-      dob: event.target.dob.value,
-      profilePhoto: event.target.profilePhoto.files[0],
-      // ... add other fields as necessary
-      reEnterPassword: event.target.reEnterPassword ? event.target.reEnterPassword.value : null,
-      // ... add other fields as necessary
-      // Add other fields as necessary
-    };
-
-    try {
-      validateFields(formData);
-      // Proceed with form submission logic
-      console.log("Form submitted successfully with data:", formData);
-    } catch (error) {
-      alert("hahahah",error.message);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#3D6E9B] to-[#003DA5] flex items-center justify-center p-4">
@@ -215,7 +215,7 @@ export default function Login() {
                 onChange={handleChange}
               />
 
-              <label className="text-[14px] mb-1 text-gray-700">Date of Birth</label>
+              {/* <label className="text-[14px] mb-1 text-gray-700">Date of Birth</label>
               <input
                 name="dob"
                 type="date"
@@ -223,7 +223,7 @@ export default function Login() {
                 className="mb-4 w-full h-[35px] text-[12px] px-4 rounded-[5px] border border-gray-300 bg-white text-black placeholder-black/60 font-['Crimson_Pro'] focus:outline-none focus:border-[#003DA5] focus:ring-1 focus:ring-[#003DA5]"
                 value={formData.dob}
                 onChange={handleChange}
-              />
+              /> */}
 
               <label className="text-[14px] mb-1 text-gray-700">Profile Photo</label>
               <input

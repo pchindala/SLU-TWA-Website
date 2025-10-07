@@ -297,12 +297,12 @@ const Profile = () => {
       <div className="flex justify-center px-4 mt-20">
         <div className="relative w-full max-w-4xl bg-white shadow-lg rounded-xl p-6 md:p-10 border border-gray-200">
           {/* Edit Icon */}
-          <button
+          {/* <button
             onClick={() => setIsDialogOpen(true)}
             className="absolute top-4 right-4 p-2 rounded-full text-blue-600 hover:bg-blue-600 hover:text-white transition-colors shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <Pencil className="w-5 h-5" />
-          </button>
+          </button> */}
 
           {/* Header */}
           <div className="flex flex-col items-center text-center mb-8">
@@ -329,7 +329,7 @@ const Profile = () => {
               <p className="text-lg font-medium text-gray-800">{user.email}</p>
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-500 uppercase tracking-wide">
+              {/* <label className="block text-sm font-semibold text-gray-500 uppercase tracking-wide">
                 Date of Birth
               </label>
               <p className="text-lg font-medium text-gray-800">
@@ -353,7 +353,7 @@ const Profile = () => {
                         })
                       : "Invalid Date";
                   })()}
-              </p>
+              </p> */}
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-500 uppercase tracking-wide">
